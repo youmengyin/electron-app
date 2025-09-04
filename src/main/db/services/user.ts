@@ -14,8 +14,8 @@ export class userServices {
   }
   /**根据id更新用户详情 */
   static async updateUserById(id: number, data: any) {
-    return await db.transaction(async (tx) => {
-      const user = await db.update(users).set(data).where(eq(users.id, id))
+    return await db.transaction( (tx) => {
+      const user =  db.update(users).set(data).where(eq(users.id, id)).run()
       if (!user) {
         tx.rollback()
         return response.error()
@@ -26,14 +26,11 @@ export class userServices {
 
   /**新增用户详情 */
   static async insertUser(data: any) {
-    return await db.transaction(async (tx) => {
-      const user = await db.insert(users).values(data)
+      const user  = await db.insert(users).values(data)
       if (!user) {
-        tx.rollback()
         return response.error()
       }
       return response.ok()
-    })
   }
 
   /**

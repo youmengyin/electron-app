@@ -8,6 +8,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ADialog: typeof import('@arco-design/web-vue')['Dialog']
+    CheckAppVersion: typeof import('./src/components/CheckAppVersion.vue')['default']
+    Had: typeof import('./src/components/had.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Versions: typeof import('./src/components/Versions.vue')['default']

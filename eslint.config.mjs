@@ -8,7 +8,21 @@ export default defineConfigWithEslint(
   {
     vue: true
   },
-  { ignores: ['**/node_modules', '**/dist', '**/out'] }
+  { ignores: ['**/node_modules', '**/dist', '**/out'] },
+  {
+    rules: {
+      'vue/component-name-in-template-casing': [
+        'error',
+        ['PascalCase', 'kebab-case', 'camelCase'],
+        {
+          ignores: ['slot', 'component'],
+
+          // Force auto-import components to be PascalCase
+          registeredComponentsOnly: false
+        }
+      ]
+    }
+  }
 )
 // export default tseslint.config(
 //   { ignores: ['**/node_modules', '**/dist', '**/out'] },

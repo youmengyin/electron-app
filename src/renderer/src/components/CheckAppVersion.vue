@@ -62,7 +62,7 @@ defineExpose({
 </script>
 
 <template>
-  <ADialog v-model="dialogVisible" title="提示" width="30%" center>
+  <a-modal v-model="dialogVisible" title="提示" width="30%" center>
     <div>打两个不同版本测试，并检查版本地址的指向新版本目录</div>
     <div>当前版本{{ pkg.version }}</div>
     <AButton @click="checkHand">检查</AButton>
@@ -72,5 +72,5 @@ defineExpose({
     <template #footer>
       <AButton @click="closeHand">关闭</AButton>
     </template>
-  </ADialog>
+  </a-modal>
 </template>

@@ -21,6 +21,7 @@ declare interface API {
   update: UpdateAPI
   createWindow: () => Promise<string>
   queryDB: (query: QueryDBType) => Promise<any>
+  logger: Record<string, (msg: any) => void>
 }
 
 declare global {

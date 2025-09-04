@@ -83,6 +83,8 @@ pnpm run build                # 构建项目 此处会先生成数据库升级�
 
 ### **📌 本地数据库同步**
 
+> 注意： 本地node版本与项目node版本会有不一致的问题, 通过 `ELECTRON_RUN_AS_NODE=1 pnpm exec electron ./node_modules/drizzle-kit/bin.cjs`命令使drizzle-kit 命令行工具运行时与electron项目node版本一致
+
 - **修改数据库 Schema结构，快速同步本地数据库结构 执行**：
 
   ```sh
@@ -95,7 +97,53 @@ pnpm run build                # 构建项目 此处会先生成数据库升级�
   npm run syncSchema-old  （此原方式废弃，速度慢）
 
   该命令包含以下三步： 
-  1. `npm rebuild` - 重新编译 `better-sqlite3` 适配本地 Node.js 版本
+  1. `pnpm rebuild better-sqlite3` - 重新编译 `better-sqlite3` 适配本地 Node.js 版本
   2. `npx drizzle-kit push` - 将 `schema` 直接同步到本地数据库
   3. `npx electron-rebuild -f -w better-sqlite3` - 重新编译 `better-sqlite3` 适配 Electron 版本
   ```
+
+### **📌 打包时数据库升级**
+
+1. 执行打包： 会先执行 `npm run db:generate`,生成数据库升级文件，数据库仍指向开发环境数据库.env.db，通过开发数据库结构生成升级文件
+  
+  ```sh
+  npm run build
+  ```
+
+```sh
+数据库文件区分开发环境.enb.db及生产环境.db两个文件，以应对drizzel-orm在本地开发
+同时本地安装生产包时，开发数据库文件结构已经是最新导致安装包升级数据库结构失败，如果使用同一个文件，则本地安装生产包时先删除已存在的数据库文件或备份为其他名称
+```
+
+### **📌 预加载（Preload）文件引用**
+
+1. **webPreferences 禁用渲染环境node、开启上下文隔离，但是没有启用沙盒模式**，需在preload中抛出原生模块或进程通信
+2. **Preload 目录文件编译为es的.mjs**，内部使用 `import` 方式引入其它模块
+
+### **📌 数据库升级方式**
+
+数据库升级分为 **开发环境** 和 **生产环境**：
+
+#### **1️⃣ 生产环境**
+
+- **打包时会自动生成数据库升级文件**，无需手动处理
+- 确保 `drizzle.config.ts` 中 `databasePath` 指向本地数据库文件
+
+#### **2️⃣ 开发环境**
+
+- **Schema 变更后，执行**：
+
+  ```sh
+  npm run db:push
+  ```
+
+  **执行的操作**：
+  - 同步开发数据库字段结构
+  - 生成数据库升级文件（存放在 `migrations` 目录） `npm run db:generate`
+
+#### **3️⃣ 迁移文件管理**
+
+- `migrations` 目录用于存放数据库升级文件
+- **不要随意删除** 该目录，否则可能导致数据丢失
+
+---
