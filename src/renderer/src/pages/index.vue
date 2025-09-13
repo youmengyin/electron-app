@@ -3,6 +3,7 @@ import { Message, Modal } from '@arco-design/web-vue'
 import { deleteUserByIdDB, getUserListDB } from '@renderer/api/user'
 import CheckAppVersion from '@renderer/components/CheckAppVersion.vue'
 import DbTest from './DbTest.vue'
+import Snowflake from '@renderer/components/Snowflake.vue'
 
 const logger = window.electronAPI.logger
 function handleSendIPC() {
@@ -90,41 +91,43 @@ function createWindowHand() {
 </script>
 
 <template>
-  <div class="h-full flex items-center justify-center">
-    <div class="flex items-center gap-4">
-      <div class="mb-10">
-        <AButton @click="checkVersion" type="text">检查app版本</AButton>
-        <AButton @click="createWindowHand">创建window</AButton>
+  <Snowflake >
+    <div class="h-full flex items-center justify-center">
+      <div class="flex items-center gap-4">
+        <div class="mb-10">
+          <AButton @click="checkVersion" type="text">检查app版本</AButton>
+          <AButton @click="createWindowHand">创建window</AButton>
+        </div>
+        <CheckAppVersion ref="checkRef" />
+        <RouterLink
+          class="border border-primary-500 rounded-md px-2 py-1 text-primary-500 transition-colors dark:border-white hover:bg-primary-500 dark:text-white hover:text-white dark:hover:text-white"
+          to="/about"
+        >
+          About
+        </RouterLink>
+        <a
+          @click="handleSendIPC"
+          class="cursor-pointer border border-primary-500 rounded-md px-2 py-1 text-primary-500 transition-colors dark:border-white hover:bg-primary-500 dark:text-white hover:text-white dark:hover:text-white"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Send IPC
+        </a>
+        <a-button @click="getUserListHand">查询用户</a-button>
+        <a-button @click="addHand">新增用户</a-button>
+        <a-table style="margin-top: 20px" stripe :data="tableData" :columns="columns">
+
+          <!-- <a-table-column prop="id" label="id" width="180"></a-table-column>
+          <a-table-column prop="user_name" label="姓名"></a-table-column>
+          <a-table-column prop="email" label="邮箱"></a-table-column> -->
+          <template #operate="{ record, rowIndex }">
+            <a-button text type="primary" @click="changeHand(record)">修改</a-button>
+            <a-button type="text" status="danger" @click="deleteHand(record)">删除</a-button>
+          </template>
+
+        </a-table>
+        <DbTest @success="getUserListHand" ref="addRef"></DbTest>
       </div>
-      <CheckAppVersion ref="checkRef" />
-      <RouterLink
-        class="border border-primary-500 rounded-md px-2 py-1 text-primary-500 transition-colors dark:border-white hover:bg-primary-500 dark:text-white hover:text-white dark:hover:text-white"
-        to="/about"
-      >
-        About
-      </RouterLink>
-      <a
-        @click="handleSendIPC"
-        class="cursor-pointer border border-primary-500 rounded-md px-2 py-1 text-primary-500 transition-colors dark:border-white hover:bg-primary-500 dark:text-white hover:text-white dark:hover:text-white"
-        target="_blank"
-        rel="noreferrer"
-      >
-        Send IPC
-      </a>
-      <a-button @click="getUserListHand">查询用户</a-button>
-      <a-button @click="addHand">新增用户</a-button>
-      <a-table style="margin-top: 20px" stripe :data="tableData" :columns="columns">
-
-        <!-- <a-table-column prop="id" label="id" width="180"></a-table-column>
-        <a-table-column prop="user_name" label="姓名"></a-table-column>
-        <a-table-column prop="email" label="邮箱"></a-table-column> -->
-        <template #operate="{ record, rowIndex }">
-          <a-button text type="primary" @click="changeHand(record)">修改</a-button>
-          <a-button type="text" status="danger" @click="deleteHand(record)">删除</a-button>
-        </template>
-
-      </a-table>
-      <DbTest @success="getUserListHand" ref="addRef"></DbTest>
     </div>
-  </div>
+  </Snowflake>
 </template>

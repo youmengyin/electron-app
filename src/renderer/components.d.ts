@@ -13,6 +13,8 @@ declare module 'vue' {
     Had: typeof import('./src/components/had.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Snoke: typeof import('./src/components/Snoke.vue')['default']
+    Snowflake: typeof import('./src/components/Snowflake.vue')['default']
     Versions: typeof import('./src/components/Versions.vue')['default']
   }
 }
